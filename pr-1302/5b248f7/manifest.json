@@ -1,0 +1,64 @@
+{
+  "summary": "在 Agent 列表页脚新增「管理」按钮（与折叠控件同排），打开可搜索、全选/反选搜索结果、选择未接入项、清空选择的批量管理对话框，并批量「隐藏所选 / 取消隐藏所选」；保存期间禁用对话框内的操作并阻止用 Escape 或背景关掉它。",
+  "scenes": [
+    {
+      "title": "打开批量管理对话框并选择 Agent",
+      "shots": [
+        {
+          "file": "01-agents-footer.png",
+          "caption": "Agent 列表页脚：折叠控件旁的「管理」按钮",
+          "width": 2492
+        },
+        {
+          "file": "02-manage-dialog.png",
+          "caption": "批量管理对话框：搜索框、四个选择按钮、Agent 列表与底部操作",
+          "width": 1296
+        },
+        {
+          "file": "03-manage-search.png",
+          "caption": "筛选后的 Agent 行与已选数量",
+          "width": 1296
+        },
+        {
+          "file": "04-manage-all-selected.png",
+          "caption": "勾选后的行、已选数量与按钮状态",
+          "width": 1296
+        },
+        {
+          "file": "05-manage-inverted.png",
+          "caption": "反选后的勾选状态与已选数量",
+          "width": 1296
+        }
+      ]
+    },
+    {
+      "title": "隐藏所选与取消隐藏所选",
+      "shots": [
+        {
+          "file": "06-manage-hidden.png",
+          "caption": "保存后对话框里的行状态、已选数量与结果文字",
+          "width": 1296
+        },
+        {
+          "file": "07-agents-after-hide.png",
+          "caption": "关闭对话框后的 Agent 列表与页脚",
+          "width": 2496
+        },
+        {
+          "file": "08-manage-unhidden.png",
+          "caption": "「取消隐藏所选」保存后的行状态与结果文字",
+          "width": 1296
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "保存失败时的错误文字与「保留选择以便重试」、保存进行中 Done/Escape/背景不可关闭的中间态，以及窄窗口下页脚两个控件不重叠、深色模式和五种语言的文案，这一版沙盒录制里都看不到（沙盒的 arrange 保存会成功，窗口也较宽）。",
+  "interactive": true,
+  "pages": 1
+}

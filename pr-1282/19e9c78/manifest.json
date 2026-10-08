@@ -1,0 +1,34 @@
+{
+  "summary": "diff 让 remote magpie 供应商取模型列表时一并发现远端显式标记的决策模型（kind: decision），并把这份可为空的决策列表传给供应商编辑器与网关（带 X-Magpie-Deciders 时 /v1/models 返回它们），界面上不再把 Jev Router 之类的聊天模型猜成决策模型，并保留远端暴露的检索模型。",
+  "scenes": [
+    {
+      "title": "远程 magpie 供应商的入口",
+      "shots": [
+        {
+          "file": "01-remote-magpie-preset.png",
+          "caption": "添加供应商面板中的 Remote magpie 预设",
+          "width": 2496
+        }
+      ]
+    },
+    {
+      "title": "网关 System One 的模型字段",
+      "shots": [
+        {
+          "file": "02-system-one-model.png",
+          "caption": "System One 示例里的模型字段，远端标记的决策模型会出现在这一栏",
+          "width": 2496
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "描述里的 TUI 模型列表拉取报错、System One/检索/媒体的调用方归属与 User-Agent、Responses 走 HTTP/SSE 等都在命令行或转发层，diff 没有给浏览器界面新增按钮、页签、设置项或提示文字；界面可见的差别只是供应商编辑器收到的 deciders 字段（可以是空数组）。",
+  "unseen": "本沙盒没有配置 remote magpie 供应商，也没有任何决策模型，所以「远端标记的决策模型出现在编辑器/System One 列表里」「空的决策列表压住 Jev Router 的名字猜测」这些效果看不到；只能展示会产生这些数据的入口：添加供应商面板里的 Remote magpie 预设，以及网关 System One 示例里的模型字段。",
+  "interactive": true,
+  "pages": 2
+}

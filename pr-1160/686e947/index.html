@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>#1160 界面预览 · 686e947</title>
+<style>:root{color-scheme:light dark;--bg:#f6f6f7;--fg:#1d1d1f;--muted:#6e6e73;--card:#fff;--line:#e5e5ea}
+@media (prefers-color-scheme:dark){:root{--bg:#111113;--fg:#f2f2f4;--muted:#9a9aa0;--card:#1c1c1f;--line:#2c2c30}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Segoe UI","PingFang SC","Noto Sans CJK SC",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:28px 16px 60px}h1{font-size:20px;margin:0 0 4px}.m{color:var(--muted);font-size:13px;margin:0 0 20px}
+video,img{display:block;width:100%;border-radius:10px;border:1px solid var(--line);background:var(--card)}figure{margin:0 0 28px}figcaption{color:var(--muted);font-size:13px;margin-top:8px}
+a{color:inherit}</style>
+<main><h1>#1160 界面预览</h1><p class="m">commit 686e947 · <a href="https://github.com/yetone/magpie/pull/1160">回到 PR</a> · 供应商编辑器的「名称与推理档位」里，每个模型行在「支持图片」旁多了一个「自己能联网搜索」勾选，答案随 Save 存进设置的 modelSearches、Cancel 丢弃、Restore default 交回默认；勾上但供应商没有 Anthropic/Responses 地址时会显示一行提示。</p>
+<figure><video src="preview.mp4" controls autoplay muted playsinline poster="poster.png"></video><figcaption>红线是鼠标走过的轨迹，红色圆环是一次点击；底部文字是这一步在做什么。空格暂停，← → 逐段查看。</figcaption></figure>
+<figure><img src="01-model-search-row.png" alt="这一行里「自己能联网搜索」勾选与「支持图片」并排"><figcaption>按模型的联网搜索勾选：勾上、未保存、恢复默认 · 这一行里「自己能联网搜索」勾选与「支持图片」并排</figcaption></figure>
+<figure><img src="02-model-search-toggled.png" alt="点击之后这一行：勾选、未保存标记与提示文字"><figcaption>按模型的联网搜索勾选：勾上、未保存、恢复默认 · 点击之后这一行：勾选、未保存标记与提示文字</figcaption></figure>
+<figure><img src="03-model-search-restored.png" alt="点过「恢复默认」之后的这一行"><figcaption>按模型的联网搜索勾选：勾上、未保存、恢复默认 · 点过「恢复默认」之后的这一行</figcaption></figure>
+<figure><img src="04-model-search-row-deepseek.png" alt="这一行里「自己能联网搜索」勾选与「支持图片」并排"><figcaption>Chat 供应商上的按模型答案与地址提示 · 这一行里「自己能联网搜索」勾选与「支持图片」并排</figcaption></figure>
+<figure><img src="05-model-search-hint.png" alt="点击之后这一行：勾选、未保存标记，以及地址相关的提示"><figcaption>Chat 供应商上的按模型答案与地址提示 · 点击之后这一行：勾选、未保存标记，以及地址相关的提示</figcaption></figure>
+<figure><img src="06-model-search-hint-reset.png" alt="点过「恢复默认」之后的这一行"><figcaption>Chat 供应商上的按模型答案与地址提示 · 点过「恢复默认」之后的这一行</figcaption></figure>
+</main></html>

@@ -1,0 +1,54 @@
+{
+  "summary": "把 Google Vertex AI 作为供应商预设加入界面：添加弹层里它的磁贴打开一个用「项目 ID / 位置 / 凭据文件 / 服务账号」代替 API 密钥的编辑器，未填项目 ID 时保存被拒，端点按项目与位置拼出，列表行的标记写凭据来源或「需要项目」；另外「用量 → 请求」里走 Gemini streamGenerateContent 的请求现在标为 Gemini。",
+  "scenes": [
+    {
+      "title": "Google Vertex AI 预设的编辑器与保存后的行",
+      "shots": [
+        {
+          "file": "01-add-sheet-vertex-tile.png",
+          "caption": "添加弹层里的供应商磁贴",
+          "width": 2496
+        },
+        {
+          "file": "02-vertex-editor-fields.png",
+          "caption": "API 密钥的位置换成项目 ID、位置、凭据文件、服务账号",
+          "width": 1296
+        },
+        {
+          "file": "03-vertex-editor-needs-project.png",
+          "caption": "未填项目 ID 时的编辑器",
+          "width": 1296
+        },
+        {
+          "file": "04-vertex-editor-endpoints.png",
+          "caption": "填了项目 ID 后出现的端点",
+          "width": 1120
+        },
+        {
+          "file": "05-vertex-row-pill.png",
+          "caption": "列表里 Google Vertex AI 一行的凭据标记",
+          "width": 2492
+        }
+      ]
+    },
+    {
+      "title": "用量里 Gemini streamGenerateContent 的协议标记",
+      "shots": [
+        {
+          "file": "06-usage-requests-protocols.png",
+          "caption": "「请求」列表里每条请求标出的协议",
+          "width": 2560
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "沙箱里没有 Google 凭据，也没有真实的 Vertex AI 项目：编辑器的「测试」以及经 Vertex AI 的真实请求（用量里 google-vertex 的 streamGenerateContent?alt=sse 行、被翻译成 Gemini 的「Chat → Gemini」标记）无法展示。行的「服务账号」「凭据文件」与「需要项目」三种标记也需要相应数据，这里只能新建一个未填凭据的 provider，行上只会显示「Google 默认凭据」。",
+  "interactive": true,
+  "pages": 2
+}

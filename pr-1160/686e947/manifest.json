@@ -1,0 +1,56 @@
+{
+  "summary": "供应商编辑器的「名称与推理档位」里，每个模型行在「支持图片」旁多了一个「自己能联网搜索」勾选，答案随 Save 存进设置的 modelSearches、Cancel 丢弃、Restore default 交回默认；勾上但供应商没有 Anthropic/Responses 地址时会显示一行提示。",
+  "scenes": [
+    {
+      "title": "按模型的联网搜索勾选：勾上、未保存、恢复默认",
+      "shots": [
+        {
+          "file": "01-model-search-row.png",
+          "caption": "这一行里「自己能联网搜索」勾选与「支持图片」并排",
+          "width": 1120
+        },
+        {
+          "file": "02-model-search-toggled.png",
+          "caption": "点击之后这一行：勾选、未保存标记与提示文字",
+          "width": 1120
+        },
+        {
+          "file": "03-model-search-restored.png",
+          "caption": "点过「恢复默认」之后的这一行",
+          "width": 1120
+        }
+      ]
+    },
+    {
+      "title": "Chat 供应商上的按模型答案与地址提示",
+      "shots": [
+        {
+          "file": "04-model-search-row-deepseek.png",
+          "caption": "这一行里「自己能联网搜索」勾选与「支持图片」并排",
+          "width": 1120
+        },
+        {
+          "file": "05-model-search-hint.png",
+          "caption": "点击之后这一行：勾选、未保存标记，以及地址相关的提示",
+          "width": 1120
+        },
+        {
+          "file": "06-model-search-hint-reset.png",
+          "caption": "点过「恢复默认」之后的这一行",
+          "width": 1120
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [
+    "Chat 供应商上的按模型答案与地址提示 · click .editor button:has-text(\"名称与推理档位\"): nothing visible matches .editor button:has-text(\"名称与推理档位\") (0 in the page)"
+  ],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "描述里提到的 `Settings › Web search` 在本沙盒的设置页签里没有对应位置；provider 级的 `<provider id>/*` 答案在编辑器里没有控件，只能改设置文件或调用接口，标题里的「per provider」在界面上只有继承效果、没有可点的勾选。",
+  "unseen": "「需要 Anthropic 或 Responses 地址；当前由 magpie 代为搜索」这行提示只在既无 Anthropic 也无 Responses 地址的供应商上出现，沙盒里各供应商的端点配置未知，可能看不到；把答案真正作用到请求上（客户端的联网搜索原样交给供应商，或改用 magpie 自己的 searcher）以及被标为不能搜的模型从 searcher 候选中被排除，都发生在网关内部，界面上看不到。",
+  "interactive": true,
+  "pages": 1
+}

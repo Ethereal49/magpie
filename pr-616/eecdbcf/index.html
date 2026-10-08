@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>#616 界面预览 · eecdbcf</title>
+<style>:root{color-scheme:light dark;--bg:#f6f6f7;--fg:#1d1d1f;--muted:#6e6e73;--card:#fff;--line:#e5e5ea}
+@media (prefers-color-scheme:dark){:root{--bg:#111113;--fg:#f2f2f4;--muted:#9a9aa0;--card:#1c1c1f;--line:#2c2c30}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Segoe UI","PingFang SC","Noto Sans CJK SC",sans-serif}
+main{max-width:1100px;margin:0 auto;padding:28px 16px 60px}h1{font-size:20px;margin:0 0 4px}.m{color:var(--muted);font-size:13px;margin:0 0 20px}
+video,img{display:block;width:100%;border-radius:10px;border:1px solid var(--line);background:var(--card)}figure{margin:0 0 28px}figcaption{color:var(--muted);font-size:13px;margin-top:8px}
+a{color:inherit}</style>
+<main><h1>#616 界面预览</h1><p class="m">commit eecdbcf · <a href="https://github.com/yetone/magpie/pull/616">回到 PR</a> · 在 Claude Code 这个 Agent 的行上新增了一个 passthrough 设置项（只出现在本机，WSL 里不出现）：默认关闭，选 on 后 Claude Code 用自己的 OAuth 登录直连 Anthropic，magpie 不再往它的配置里写 ANTHROPIC_AUTH_TOKEN，网关也对这类请求放行。</p>
+<figure><video src="preview.mp4" controls autoplay muted playsinline poster="poster.png"></video><figcaption>红线是鼠标走过的轨迹，红色圆环是一次点击；底部文字是这一步在做什么。空格暂停，← → 逐段查看。</figcaption></figure>
+<figure><img src="01-claude-passthrough-field.png" alt="展开后 Claude Code 行上多出的 passthrough 设置"><figcaption>Claude Code 行上的 passthrough 设置 · 展开后 Claude Code 行上多出的 passthrough 设置</figcaption></figure>
+<figure><img src="02-claude-connected-row.png" alt="接入后的 Claude Code 行"><figcaption>Claude Code 行上的 passthrough 设置 · 接入后的 Claude Code 行</figcaption></figure>
+<figure><img src="03-claude-settings.png" alt="Claude Code 的设置里出现的 passthrough"><figcaption>Claude Code 行上的 passthrough 设置 · Claude Code 的设置里出现的 passthrough</figcaption></figure>
+<figure><img src="04-passthrough-options.png" alt="passthrough 的选项和它的说明"><figcaption>Claude Code 行上的 passthrough 设置 · passthrough 的选项和它的说明</figcaption></figure>
+</main></html>

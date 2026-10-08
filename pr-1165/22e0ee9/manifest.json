@@ -1,0 +1,54 @@
+{
+  "summary": "本机预设（Ollama、LM Studio、oMLX）的添加/编辑编辑器在密钥下方新增折叠的「服务器地址」区，填写地址会把各 API 的 URL 移到该地址上并实时更新终结点预览，无效地址会被拒绝并自动展开、聚焦输入框；预设说明文字也改成「local server, port 1234/8000 by default」。",
+  "scenes": [
+    {
+      "title": "本机预设的服务器地址",
+      "shots": [
+        {
+          "file": "01-add-provider-sheet.png",
+          "caption": "添加供应商列表：三个本机预设的说明文字",
+          "width": 2496
+        },
+        {
+          "file": "02-ollama-editor-folded.png",
+          "caption": "Ollama 的编辑器：密钥下方是折叠的「服务器地址」",
+          "width": 1296
+        },
+        {
+          "file": "03-ollama-editor-folded.png",
+          "caption": "Ollama 的编辑器：密钥下方是折叠的「服务器地址」",
+          "width": 1296
+        },
+        {
+          "file": "04-address-field.png",
+          "caption": "地址输入框与它的占位符",
+          "width": 1224
+        },
+        {
+          "file": "05-endpoints-follow.png",
+          "caption": "填入地址后的终结点预览",
+          "width": 1120
+        }
+      ]
+    },
+    {
+      "title": "不是地址的输入",
+      "shots": []
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [
+    "本机预设的服务器地址 · click .editor details.more summary: nothing visible matches .editor details.more summary (0 in the page)",
+    "本机预设的服务器地址 · shot #modal .editor: nothing visible matches #modal .editor (0 in the page)",
+    "不是地址的输入 · click #addProvider: nothing visible matches #addProvider (1 in the page)",
+    "不是地址的输入 · type input.address: nothing visible matches input.address (1 in the page)",
+    "不是地址的输入 · shot .editor: nothing visible matches .editor (0 in the page)"
+  ],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "沙盒里没有已添加的本地预设（Ollama / LM Studio / oMLX，现有供应商是 DeepSeek、Sub2API Relay、Acme Cloud、Codex），所以「编辑已保存的本地预设时该区按其地址决定是否展开」「已保存地址与预设默认不同」「测试 / 保存时发送移动后的 URL」「URL 为别处所设时保存不动它们」这些只能看添加流程，看不到。TUI（添加时先问地址、w 改地址）和 CLI 用法示例也不在这个网页界面里，无法录制。",
+  "interactive": true,
+  "pages": 1
+}

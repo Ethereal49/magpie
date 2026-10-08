@@ -1,0 +1,42 @@
+{
+  "summary": "在 Claude Code 这个 Agent 的行上新增了一个 passthrough 设置项（只出现在本机，WSL 里不出现）：默认关闭，选 on 后 Claude Code 用自己的 OAuth 登录直连 Anthropic，magpie 不再往它的配置里写 ANTHROPIC_AUTH_TOKEN，网关也对这类请求放行。",
+  "scenes": [
+    {
+      "title": "Claude Code 行上的 passthrough 设置",
+      "shots": [
+        {
+          "file": "01-claude-passthrough-field.png",
+          "caption": "展开后 Claude Code 行上多出的 passthrough 设置",
+          "width": 2492
+        },
+        {
+          "file": "02-claude-connected-row.png",
+          "caption": "接入后的 Claude Code 行",
+          "width": 2492
+        },
+        {
+          "file": "03-claude-settings.png",
+          "caption": "Claude Code 的设置里出现的 passthrough",
+          "width": 2560
+        },
+        {
+          "file": "04-passthrough-options.png",
+          "caption": "passthrough 的选项和它的说明",
+          "width": 2560
+        }
+      ]
+    }
+  ],
+  "video": "preview.mp4",
+  "poster": "poster.png",
+  "errors": [
+    "Claude Code 行上的 passthrough 设置 · click .row.agent[data-id=\"claude\"] .field[data-key=\"passthrough\"]: nothing visible matches .row.agent[data-id=\"claude\"] .field[data-key=\"passthrough\"] (0 in the page)",
+    "Claude Code 行上的 passthrough 设置 · click .row.agent[data-id=\"claude\"] .field[data-key=\"passthrough\"]: nothing visible matches .row.agent[data-id=\"claude\"] .field[data-key=\"passthrough\"] (0 in the page)"
+  ],
+  "leak": false,
+  "skipped": null,
+  "mismatch": "",
+  "unseen": "沙盒里没有 Claude 订阅账号：既没有 sk-ant-oat 的 OAuth 登录，Claude Code 也没有 /login 过，所以打开这个设置之后真正生效的样子（请求直达 Anthropic、不脱敏、/v1/models 里多出官方 claude 模型、网关「最近调用」里出现 anthropic 记录）都无法呈现；能看到的只有这一项设置本身和它的选项说明。",
+  "interactive": true,
+  "pages": 1
+}
