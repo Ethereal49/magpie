@@ -91,8 +91,8 @@ func stampLogHandle(f *os.File, info os.FileInfo) os.FileInfo {
 	if raw.ChangeTime == 0 {
 		return info
 	}
-	stamp := windows.Filetime{LowDateTime: uint32(raw.ChangeTime), HighDateTime: uint32(raw.ChangeTime >> 32)}
-	return logFileInfo{FileInfo: info, changeTime: time.Unix(0, stamp.Nanoseconds())}
+	changed := time.Unix(raw.ChangeTime/10_000_000-11_644_473_600, raw.ChangeTime%10_000_000*100)
+	return logFileInfo{FileInfo: info, changeTime: changed}
 }
 
 // nativeLogChangeTime extracts the time captured at snapshot time. It never
