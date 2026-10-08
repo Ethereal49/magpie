@@ -66,8 +66,14 @@ func logSnapshotFor(metadataOnly bool) *logSnapshot {
 	old := logIndex.snapshot
 	unchanged := old != nil && old.path == path && (err != nil && old.info == nil || err == nil && sameLogInfo(old.info, info))
 	if unchanged && info != nil {
-		if logChangeStamp(info) == "" || !old.settled && !settled {
+		if logChangeStamp(info) == "" || !old.settled {
 			unchanged = old.hash != "" && logRecordHash(path, info.Size()) == old.hash
+			if unchanged && settled {
+				promoted := *old
+				promoted.info, promoted.settled = info, true
+				old = &promoted
+				logIndex.snapshot = old
+			}
 		} else {
 			unchanged = old.settled && settled
 		}
