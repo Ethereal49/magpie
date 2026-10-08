@@ -39,8 +39,17 @@ func historyLog(t testing.TB, n int) {
 	}
 }
 
+// Cache performance tests start after the filesystem's change stamp has settled.
+func settleLogClock(t testing.TB) {
+	t.Helper()
+	old := logIndexNow
+	logIndexNow = func() time.Time { return time.Now().Add(2 * logStampSettle) }
+	t.Cleanup(func() { logIndexNow = old })
+}
+
 func TestUsageOverviewDoesNotReparseHistory(t *testing.T) {
 	pageHome(t)
+	settleLogClock(t)
 	holdClock(t, time.Date(2026, 9, 30, 12, 0, 0, 0, time.Local))
 	historyLog(t, 4000)
 	if s := Summarize(Today); s.Calls != 1 {
@@ -53,6 +62,7 @@ func TestUsageOverviewDoesNotReparseHistory(t *testing.T) {
 
 func TestUsageViasSkipsOldHistory(t *testing.T) {
 	pageHome(t)
+	settleLogClock(t)
 	historyLog(t, 4000)
 	since := time.Now().Add(-time.Hour)
 	if v := Vias(since); len(v) != 1 || v["codex|s"][0].Calls != 1 {
@@ -161,6 +171,7 @@ func TestCachedSummaryRemainsCallerOwned(t *testing.T) {
 }
 
 func BenchmarkIncrementalUsage(b *testing.B) {
+	settleLogClock(b)
 	// benchmark homes are isolated just as pageHome isolates test homes
 	testenv.SetHome(b, b.TempDir())
 	b.Setenv("XDG_CONFIG_HOME", b.TempDir())
