@@ -7855,17 +7855,17 @@ func asksResponses(body []byte) bool {
 var cacheControlField = []byte("cache_control")
 
 // parseTranslated parses the request a translation rebuilds. An Anthropic
-// request to an Anthropic-speaking upstream that carries cache_control of
-// its own is read with its marks (#4571), so the rebuild can keep them
-// where the client put them: a turn whose history only grew then reads
-// the turn before at the boundary the client marked, instead of writing
-// the whole history again. A set that fails the checks any Messages
-// request must pass goes the default way, its marks dropped as before,
-// not refused with a 400 the old translation never gave (#3835). Every
-// other request is one bytes.Contains away from this, a scan next to the
-// parse of the same body.
+// request to an Anthropic- or Chat-speaking upstream that carries
+// cache_control of its own is read with its marks (#4571, #5125), so the
+// rebuild can keep them where the client put them: a turn whose history
+// only grew then reads the turn before at the boundary the client marked,
+// instead of writing the whole history again. A set that fails the checks
+// any Messages request must pass goes the default way, its marks dropped
+// as before, not refused with a 400 the old translation never gave
+// (#3835). Every other request is one bytes.Contains away from this, a
+// scan next to the parse of the same body.
 func parseTranslated(from, to provider.Protocol, body []byte) (*Request, error) {
-	if from == provider.Anthropic && to == provider.Anthropic && bytes.Contains(body, cacheControlField) {
+	if from == provider.Anthropic && (to == provider.Anthropic || to == provider.Chat) && bytes.Contains(body, cacheControlField) {
 		if req, err := parseAnthropicRequest(body, true); err == nil {
 			return afterParse(from, body, req)
 		}

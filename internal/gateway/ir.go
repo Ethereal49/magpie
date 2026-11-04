@@ -173,7 +173,8 @@ type Tool struct {
 type Request struct {
 	// clientCache is non-nil only for a request read with its client's
 	// marks: the Claude bridge's explicit opt-in, and a Messages ask
-	// translated to an Anthropic upstream (parseTranslated, #4571).
+	// translated to an Anthropic or Chat upstream (parseTranslated, #4571,
+	// #5125).
 	clientCache *clientCache
 	// leanPrompt has the Claude bridge give the caller's instructions as
 	// the run's system prompt, in place of Claude Code's (ClaudeLeanPrompt).

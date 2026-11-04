@@ -17,6 +17,7 @@ import (
 // move them in its existing history, and reports that gap on the reply.
 type clientCache struct {
 	system          []cachePoint
+	systemLen       int // the system's flattened text, before the billing line is cut
 	tail            string
 	count           int
 	tools           int
@@ -127,6 +128,17 @@ func partMark(ttl string) map[string]string {
 	return cacheMark(ttl)
 }
 
+// chatCacheMark is a client's mark as a Chat content part carries it
+// (OpenRouter's Claude cache points): Anthropic's default five minutes
+// goes without a ttl, as the client wrote it, and an hour keeps its own.
+func chatCacheMark(ttl string) map[string]string {
+	m := map[string]string{"type": "ephemeral"}
+	if ttl != "" && ttl != "5m" {
+		m["ttl"] = ttl
+	}
+	return m
+}
+
 func shorterTTL(a, b string) string {
 	if a == "" {
 		return b
@@ -170,7 +182,9 @@ func readClientCache(a aRequest) (*clientCache, error) {
 	}
 	var system []json.RawMessage
 	_ = json.Unmarshal(a.System, &system)
-	cut := len(stringOrText(a.System)) - len(withoutBillingHeader(stringOrText(a.System)))
+	sys := stringOrText(a.System)
+	c.systemLen = len(sys)
+	cut := len(sys) - len(withoutBillingHeader(sys))
 	lastEnd := cut
 	for i, raw := range system {
 		var b struct {

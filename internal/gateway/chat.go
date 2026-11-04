@@ -343,7 +343,7 @@ func buildChat(r *Request, model, host string, rejectTemp bool) []byte {
 	r = responseInstructions(r)
 	var msgs []map[string]any
 	if r.System != "" {
-		msgs = append(msgs, map[string]any{"role": "system", "content": r.System})
+		msgs = append(msgs, map[string]any{"role": "system", "content": chatSystemContent(r)})
 	}
 	replay := chatReplaysReasoning(host, model)
 	// MiniMax's own Chat API gives a model's thinking in the text, between
@@ -487,12 +487,21 @@ func buildChat(r *Request, model, host string, rejectTemp bool) []byte {
 		for _, p := range m.Parts {
 			switch p.Kind {
 			case Text:
-				content = append(content, map[string]any{"type": "text", "text": p.Text})
+				part := map[string]any{"type": "text", "text": p.Text}
+				if p.cache != "" {
+					part["cache_control"] = chatCacheMark(p.cache)
+					plain = false
+				}
+				content = append(content, part)
 			case File:
 				content = append(content, map[string]any{"type": "text", "text": attachmentText(p)})
 			case Image:
 				plain = false
-				content = append(content, chatImage(p))
+				im := chatImage(p)
+				if p.cache != "" {
+					im["cache_control"] = chatCacheMark(p.cache)
+				}
+				content = append(content, im)
 			case ToolResult:
 				out := p.Text
 				if n := len(p.Images); n > 0 {
@@ -516,6 +525,12 @@ func buildChat(r *Request, model, host string, rejectTemp bool) []byte {
 				}
 				tools = append(tools, tool)
 				seeLater(p)
+			}
+		}
+		if i == len(turns)-1 && len(content) > 0 {
+			if c := r.clientCache; c != nil && c.tail != "" {
+				content[len(content)-1]["cache_control"] = chatCacheMark(c.tail)
+				plain = false
 			}
 		}
 		msgs = append(msgs, tools...)
@@ -606,6 +621,41 @@ func buildChat(r *Request, model, host string, rejectTemp bool) []byte {
 	}
 	b, _ := marshalBody(out, "messages")
 	return b
+}
+
+// chatSystemContent is the system message's content for a Chat upstream:
+// the text alone, or the text split at the client's cache breakpoints,
+// each part up to a breakpoint marked (#5125). The offsets are the
+// client's, whose system was flattened block by block; the billing line
+// the forwarded request dropped from its start shifts them back.
+func chatSystemContent(r *Request) any {
+	c := r.clientCache
+	if c == nil || len(c.system) == 0 {
+		return r.System
+	}
+	shift := c.systemLen - len(r.System)
+	if shift < 0 {
+		// the system grew past the text the marks were read from (a
+		// folded system message): its offsets no longer say where they go
+		return r.System
+	}
+	var parts []map[string]any
+	last := 0
+	for _, p := range c.system {
+		end := p.End - shift
+		if end <= last || end > len(r.System) {
+			continue
+		}
+		parts = append(parts, map[string]any{"type": "text", "text": r.System[last:end], "cache_control": chatCacheMark(p.TTL)})
+		last = end
+	}
+	if last < len(r.System) {
+		parts = append(parts, map[string]any{"type": "text", "text": r.System[last:]})
+	}
+	if len(parts) == 0 {
+		return r.System
+	}
+	return parts
 }
 
 // pairToolMessages mends the tool exchange of a Chat request's messages
