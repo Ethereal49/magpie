@@ -212,7 +212,7 @@ func ScrubJSON(body []byte) []byte {
 func scrubJSON(b []byte) ([]byte, bool) {
 	return walk(b, func(_, key, s string) string {
 		switch {
-		case strings.HasPrefix(s, "data:"):
+		case fileData(s):
 			return s
 		case key != "" && SecretName(key):
 			return Scrubbed

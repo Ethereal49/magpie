@@ -307,7 +307,7 @@ func waiting(name string, data []byte) bool {
 // sealedText says a string of a vendor's answer goes on as it came: what the
 // vendor sealed (signatureKeys) and a file's encoded data.
 func sealedText(key, s string) bool {
-	return slices.Contains(signatureKeys, key) || strings.HasPrefix(s, "data:") ||
+	return slices.Contains(signatureKeys, key) || fileData(s) ||
 		key == "data" && len(s) >= 64 && !strings.ContainsAny(s, " \n")
 }
 

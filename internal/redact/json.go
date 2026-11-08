@@ -3,6 +3,7 @@ package redact
 import (
 	"bytes"
 	"encoding/json"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -34,7 +35,7 @@ var kept = map[string]bool{
 // Lark grammar's rule name ("pd" in update_hunk) left a grammar the vendor
 // turned away with 400 "Invalid lark grammar" (#1911).
 func keepIn(path, key, s string, args, defs []string) bool {
-	if strings.HasPrefix(s, "data:") {
+	if fileData(s) {
 		return true
 	}
 	if under(path, args) {
@@ -45,6 +46,16 @@ func keepIn(path, key, s string, args, defs []string) bool {
 	}
 	return kept[key] || isID(key)
 }
+
+// dataURL is a file's data written whole into a string: "data:", an optional
+// media type and parameters, ";base64," and the base64 alone.
+var dataURL = regexp.MustCompile(`^data:(?:[A-Za-z0-9!#$&^_.+-]+/[A-Za-z0-9!#$&^_.+-]+)?(?:;[A-Za-z0-9!#$&^_.+-]+=[^;,\s]*)*;base64,[A-Za-z0-9+/_-]*={0,2}$`)
+
+// fileData says s is a file's encoded data (an image's data URL), which is
+// kept as it is. A text that only starts with "data:" is not: an event
+// stream a tool printed ("data: {\"api_key\":…}") or a line the user wrote
+// is masked like any other.
+func fileData(s string) bool { return strings.HasPrefix(s, "data:") && dataURL.MatchString(s) }
 
 // isID says a key holds an identifier the vendor matches against another:
 // a tool result's tool_call_id against its call's id, an approval's
@@ -459,7 +470,7 @@ func MaskJSON(body []byte, o Options) ([]byte, int) {
 	// the definitions after the rest, so a value the model found in what
 	// is said is masked in them too, as known
 	out, ok := walk(body, func(path, key, s string) string {
-		if strings.HasPrefix(s, "data:") || signed != nil && under(path, signed) {
+		if fileData(s) || signed != nil && under(path, signed) {
 			return s
 		}
 		if o.Secrets && under(path, args) && namedSecret(key, s) {
