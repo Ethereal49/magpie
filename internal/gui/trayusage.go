@@ -601,7 +601,7 @@ func trayEgressTip(lang string, r egress.Result) string {
 	if r.State != egress.Unsupported {
 		return ""
 	}
-	return "⚠ " + trayText(lang, "Claude's way out to the internet is in %s, outside Anthropic's supported regions", r.Loc)
+	return "⚠ " + trayText(lang, "Claude API route check: %s is outside Anthropic's supported regions", r.Loc)
 }
 
 // trayEgress is the Claude accounts' way out as the tray tells it: Unknown

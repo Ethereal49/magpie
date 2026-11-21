@@ -2266,13 +2266,15 @@ Regions Policy, before Claude subscription requests go out from there.
   Gibraltar, Réunion, Greenland…). Hong Kong and Macao are China's, which
   isn't listed. Ukraine is listed except for five regions a country code
   can't tell apart, so a way out in Ukraine always reads as supported.
-- **The lookup.** `egress.Check` asks Cloudflare's
-  `https://www.cloudflare.com/cdn-cgi/trace` for its `loc=` through the
-  same proxy choice the Claude accounts' requests use (`ProxyOfLogin` over
-  the Claude logins, `provider.ClaudeProxies`; `""` is magpie's own proxy
-  setting), once per distinct choice. `XX`, `T1` (Tor), an empty or
-  malformed code, a non-200 or a failed request are **Unknown**, which is
-  neither fine nor unsupported: it draws nothing and holds nothing.
+- **The lookup.** `egress.Check` reads Cloudflare's `loc=` from
+  `https://api.anthropic.com/cdn-cgi/trace`. The unauthenticated GET
+  uses the Claude API host so a destination-based proxy can match the same
+  rule as API traffic. magpie uses the Claude accounts' proxy choices
+  (`ProxyOfLogin` over the Claude logins, `provider.ClaudeProxies`;
+  `""` is magpie's own proxy setting), once per distinct choice. It
+  follows no redirects and falls back to no other host. `XX`, `T1` (Tor),
+  an empty or malformed code, a non-200 or a failed request are
+  **Unknown**, which draws nothing and holds nothing.
 - **When.** Never per request. `egress.Keep` (started by the gateway's
   `ListenAndServe`) looks up at the start, again when the network or the
   set of proxy choices changes (a fingerprint of the interfaces' addresses
@@ -2286,9 +2288,9 @@ Regions Policy, before Claude subscription requests go out from there.
   over OK). Unsupported draws a line over the Providers list
   (`egress.js`, imported only then) naming the region in the reader's
   language, with Check again (`POST /api/egress/check`), and the tray's
-  tooltip begins with a warning (`trayEgressTip`). Neither says anything
-  of bans or of keeping an account safe: the policy is Anthropic's, and
-  magpie can only say where the way out is.
+  tooltip begins with a warning (`trayEgressTip`). Both label the region
+  as the result of a Claude API route check. Anthropic decides whether
+  its service is available.
 - **The hold** (Claude editor → Advanced → Hold requests outside supported
   regions, `claudeRegionHold`, off by default). On, `egress.Hold` refuses
   a Claude subscription request whose choice last read Unsupported, before
@@ -2299,11 +2301,9 @@ Regions Policy, before Claude subscription requests go out from there.
   the request go. `failure` reads a held reply as `failProxy`: nobody
   rests, and the next account or member is asked. A choice not looked up
   yet goes, and asks for a lookup.
-  - It is off by default because Cloudflare's `loc` can differ from what
-    Anthropic sees: a rule-based proxy (Clash and the like) can send
-    cloudflare.com and anthropic.com through different nodes, or one of
-    them direct. A wrong Unsupported must not stop anyone's requests; the
-    warning says it, and the user decides.
+  - It is off by default. A proxy can still select different routes by
+    process or by connection, and Cloudflare's IP geolocation can differ
+    from Anthropic's. The user decides whether to act on the probe.
   - Not held: the provider's own HTTP paths (token refresh, the usage
     endpoint), which aren't Claude Code runs.
 

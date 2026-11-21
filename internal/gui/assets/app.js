@@ -21986,7 +21986,7 @@ function renderReplies(s, keep) {
   // Claude's requests held while their way out is in a region Anthropic
   // doesn't list (internal/egress, off unless on)
   const g = segRow("claudeRegionRow", t("Hold requests outside supported regions"),
-    t("While this computer's way out to the internet is in a region Anthropic doesn't list, Claude requests aren't sent and the agent is told why. A lookup that fails holds nothing"),
+    t("When the Claude API route check reports a region Anthropic doesn't support, Claude requests are held and the agent is told why. If the check fails, requests continue"),
     onOff, s.claudeRegionHold ? "on" : "off", (v) => savePrefs({ ...keep, claudeRegionHold: v === "on" }));
   box.append(r, l);
   // a Claude run's, in its provider's editor (PROV_PREFS)

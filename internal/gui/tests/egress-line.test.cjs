@@ -17,11 +17,11 @@ const { provPrefsProviders, openProvPrefs, inEditor } = require("./reader.cjs");
 
 const assets = path.resolve(__dirname, "../assets");
 const L = {
-  en: { head: "Claude's way out to the internet is in China", why: "isn't on Anthropic's list of supported regions", held: "Claude requests are held until it changes", again: "Check again", name: "Hold requests outside supported regions", sub: "A lookup that fails holds nothing", off: "Off", on: "On" },
-  zh: { head: /Claude 的网络出口在中国(大陆)?/, why: "不在 Anthropic 支持的地区列表中", held: "Claude 请求会被暂停", again: "重新检测", name: "在不支持的地区时暂停请求", sub: "检测失败时不会暂停任何请求", off: "关闭", on: "开启" },
-  "zh-TW": { head: /Claude 的網路出口在中國(大陸)?/, why: "不在 Anthropic 支援的地區列表中", held: "Claude 請求會被暫停", again: "重新檢測", name: "在不支援的地區時暫停請求", sub: "檢測失敗時不會暫停任何請求", off: "關閉", on: "開啟" },
-  ja: { head: /Claude のネットワーク出口が中国(本土)?にあります/, why: "サポート対象地域の一覧にありません", held: "Claude のリクエストは保留されます", again: "再確認", name: "サポート対象外の地域ではリクエストを保留", sub: "確認に失敗したときは何も保留しません", off: "オフ", on: "オン" },
-  de: { head: "Claudes Weg ins Internet führt über China", why: "steht nicht auf Anthropics Liste unterstützter Regionen", held: "werden zurückgehalten", again: "Erneut prüfen", name: "Anfragen außerhalb unterstützter Regionen zurückhalten", sub: "Eine fehlgeschlagene Prüfung hält nichts zurück", off: "Aus", on: "An" },
+  en: { head: "Claude API route check: China", why: "isn't on Anthropic's list of supported regions", held: "Claude requests are held until it changes", again: "Check again", name: "Hold requests outside supported regions", sub: "If the check fails, requests continue", off: "Off", on: "On" },
+  zh: { head: /Claude API 出口检测：中国(大陆)?/, why: "不在 Anthropic 支持的地区列表中", held: "Claude 请求会被暂停", again: "重新检测", name: "在不支持的地区时暂停请求", sub: "检测失败时，请求照常发送", off: "关闭", on: "开启" },
+  "zh-TW": { head: /Claude API 網路出口檢測：中國(大陸)?/, why: "不在 Anthropic 支援的地區列表中", held: "Claude 請求會被暫停", again: "重新檢測", name: "在不支援的地區時暫停請求", sub: "檢測失敗時，請求照常送出", off: "關閉", on: "開啟" },
+  ja: { head: /Claude API の接続元チェック：中国(本土)?/, why: "サポート対象地域の一覧にありません", held: "Claude のリクエストは保留されます", again: "再確認", name: "サポート対象外の地域ではリクエストを保留", sub: "チェックに失敗した場合は通常どおり送信します", off: "オフ", on: "オン" },
+  de: { head: "Claude-API-Verbindungsprüfung: China", why: "steht nicht auf Anthropics Liste unterstützter Regionen", held: "werden zurückgehalten", again: "Erneut prüfen", name: "Anfragen außerhalb unterstützter Regionen zurückhalten", sub: "Schlägt die Prüfung fehl, werden Anfragen weiter gesendet", off: "Aus", on: "An" },
 };
 
 function serve(lang, w, egress, settings, saved, checks) {

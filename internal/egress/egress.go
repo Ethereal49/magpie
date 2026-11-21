@@ -1,13 +1,13 @@
-// Package egress finds where this computer's way out to the internet is,
-// through each proxy a Claude subscription's requests go through, and
-// says when it is in a region Anthropic doesn't list as supported
+// Package egress checks the route to the Claude API through each proxy a
+// Claude subscription uses and warns when the probe reports a region
+// Anthropic doesn't list as supported
 // (Supported): a proxy that dropped, a VPN turned off, a node in the
 // wrong country (@alterxyz4 on X asked for this "canary").
 //
-// The lookup asks Cloudflare's trace page (TraceURL) through the same
-// proxy, and reads its loc= line. It never touches Anthropic or the
-// user's account. It runs when magpie starts, when the network or a
-// proxy setting changes, and every Every, never per request (Keep). A
+// The lookup reads loc= from the Cloudflare trace served on the Claude
+// API host, so domain-based rules can match the same host as API requests.
+// It sends no account credentials. It runs at startup, on network or
+// proxy changes, and every Every, never per request (Keep). A
 // lookup that fails says nothing: its state is Unknown, which neither
 // warns nor holds.
 package egress
@@ -47,7 +47,7 @@ type Result struct {
 }
 
 // TraceURL is the page asked; a test points it at its own server.
-var TraceURL = "https://www.cloudflare.com/cdn-cgi/trace"
+var TraceURL = "https://api.anthropic.com/cdn-cgi/trace"
 
 // Client sends the lookup. http.DefaultClient goes through netproxy
 // (netproxy.Install), so the choice With names is the proxy it takes.
@@ -171,7 +171,10 @@ func lookup(ctx context.Context, choice string) Result {
 	if err != nil {
 		return Result{State: Unknown, At: now, Error: err.Error()}
 	}
-	resp, err := Client.Do(req)
+	// A redirected trace could go through a different route.
+	client := *Client
+	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	resp, err := client.Do(req)
 	if err != nil {
 		return Result{State: Unknown, At: now, Error: redactErr(err.Error(), choice)}
 	}
@@ -304,5 +307,5 @@ func (e *HeldError) Error() string {
 	default:
 		via = "through " + e.Result.Via
 	}
-	return fmt.Sprintf("%s: this computer's way out to the internet, %s, is in region %s, which isn't on Anthropic's list of supported regions. Turn the proxy or VPN back on, or turn off \"Hold requests outside supported regions\" in Providers › Claude › Advanced", HeldWords, via, e.Result.Loc)
+	return fmt.Sprintf("%s: the Claude API route check, %s, reported region %s, which isn't on Anthropic's list of supported regions. Turn the proxy or VPN back on, or turn off \"Hold requests outside supported regions\" in Providers › Claude › Advanced", HeldWords, via, e.Result.Loc)
 }

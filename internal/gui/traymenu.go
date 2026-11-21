@@ -44,7 +44,7 @@ var trayZh = map[string]string{
 	"Today: no requests yet":              "今天：还没有请求",
 	"Today: %s":                           "今天：%s",
 	// the tooltip's warning (trayEgressTip)
-	"Claude's way out to the internet is in %s, outside Anthropic's supported regions": "Claude 的网络出口在 %s，不在 Anthropic 支持的地区内",
+	"Claude API route check: %s is outside Anthropic's supported regions": "Claude API 出口检测：%s 不在 Anthropic 支持的地区内",
 }
 
 // trayZhTW is the tray menu in Traditional Chinese, with Taiwan's words.
@@ -82,7 +82,7 @@ var trayZhTW = map[string]string{
 	"Today: no requests yet":              "今天：還沒有請求",
 	"Today: %s":                           "今天：%s",
 	// the tooltip's warning (trayEgressTip)
-	"Claude's way out to the internet is in %s, outside Anthropic's supported regions": "Claude 的網路出口在 %s，不在 Anthropic 支援的地區內",
+	"Claude API route check: %s is outside Anthropic's supported regions": "Claude API 網路出口檢測：%s 不在 Anthropic 支援的地區內",
 }
 
 // trayJa is the tray menu in Japanese.
@@ -120,7 +120,7 @@ var trayJa = map[string]string{
 	"Today: no requests yet":              "今日：まだリクエストはありません",
 	"Today: %s":                           "今日：%s",
 	// the tooltip's warning (trayEgressTip)
-	"Claude's way out to the internet is in %s, outside Anthropic's supported regions": "Claude のネットワーク出口が %s にあり、Anthropic のサポート対象地域外です",
+	"Claude API route check: %s is outside Anthropic's supported regions": "Claude API の接続元チェック：%s は Anthropic のサポート対象地域外です",
 }
 
 // trayDe is the tray menu in German.
@@ -158,7 +158,7 @@ var trayDe = map[string]string{
 	"Today: no requests yet":              "Heute: noch keine Anfragen",
 	"Today: %s":                           "Heute: %s",
 	// the tooltip's warning (trayEgressTip)
-	"Claude's way out to the internet is in %s, outside Anthropic's supported regions": "Claudes Weg ins Internet führt über %s, außerhalb der von Anthropic unterstützten Regionen",
+	"Claude API route check: %s is outside Anthropic's supported regions": "Claude-API-Verbindungsprüfung: %s liegt außerhalb der von Anthropic unterstützten Regionen",
 }
 
 // trayWords are the tray menu's and the tray icon's tooltip's

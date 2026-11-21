@@ -29,7 +29,7 @@ window.egressLine = function () {
   };
   const why = [t("{region} isn't on Anthropic's list of supported regions. A proxy or VPN that turned off, or a node in another country, can cause this.", { region })];
   if (state?.settings?.claudeRegionHold) why.push(t("Claude requests are held until it changes."));
-  const card = depLine("egress", t("Claude's way out to the internet is in {region}", { region }),
+  const card = depLine("egress", t("Claude API route check: {region}", { region }),
     why.join(locale === "zh" || locale === "zh-TW" || locale === "ja" ? "" : " "), again);
   if (p.egress.via) card.title = p.egress.via === "direct" ? t("Looked up going direct") : t("Looked up through {proxy}", { proxy: p.egress.via });
   return card;

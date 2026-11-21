@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -28,7 +29,7 @@ func fakeTrace(t *testing.T, loc *atomic.Value, status *atomic.Int32) *atomic.In
 			w.WriteHeader(int(s))
 			return
 		}
-		fmt.Fprintf(w, "fl=1\nh=www.cloudflare.com\nip=203.0.113.9\nts=1\nvisit_scheme=https\nloc=%s\ntls=TLSv1.3\n", loc.Load())
+		fmt.Fprintf(w, "fl=1\nh=api.anthropic.com\nip=203.0.113.9\nts=1\nvisit_scheme=https\nloc=%s\ntls=TLSv1.3\n", loc.Load())
 	}))
 	t.Cleanup(srv.Close)
 	was, wasClient := TraceURL, Client
@@ -130,6 +131,49 @@ func TestCheckReadsTheTrace(t *testing.T) {
 	loc.Store("JP")
 	if r := Check(context.Background(), "direct"); r.State != OK || r.Loc != "JP" {
 		t.Fatalf("got %+v", r)
+	}
+}
+
+type traceTransport func(*http.Request) (*http.Response, error)
+
+func (f traceTransport) RoundTrip(req *http.Request) (*http.Response, error) { return f(req) }
+
+func TestCheckUsesClaudeAPIHostAndDoesNotFollowRedirects(t *testing.T) {
+	sandbox(t)
+	holdOn(t)
+	was := Client
+	t.Cleanup(func() { Client = was; Forget() })
+	const apiTrace = "https://api.anthropic.com/cdn-cgi/trace"
+	const otherTrace = "https://www.cloudflare.com/cdn-cgi/trace"
+	var redirect bool
+	var urls []string
+	Client = &http.Client{Transport: traceTransport(func(req *http.Request) (*http.Response, error) {
+		url := req.URL.String()
+		urls = append(urls, url)
+		switch url {
+		case apiTrace:
+			if redirect {
+				return &http.Response{StatusCode: http.StatusFound, Header: http.Header{"Location": {otherTrace}}, Body: http.NoBody}, nil
+			}
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("loc=US\n"))}, nil
+		case otherTrace:
+			return &http.Response{StatusCode: http.StatusOK, Body: io.NopCloser(strings.NewReader("loc=HK\n"))}, nil
+		default:
+			return nil, fmt.Errorf("unexpected trace URL: %s", url)
+		}
+	})}
+	if r := Check(context.Background(), "direct"); r.State != OK || r.Loc != "US" {
+		t.Fatalf("Claude API trace: got %+v, want OK/US", r)
+	}
+	redirect = true
+	if r := Check(context.Background(), "direct"); r.State != Unknown {
+		t.Fatalf("redirected trace: got %+v, want Unknown", r)
+	}
+	if err := Hold(context.Background(), "direct"); err != nil {
+		t.Fatalf("a redirected trace held the request: %v", err)
+	}
+	if !slices.Equal(urls, []string{apiTrace, apiTrace}) {
+		t.Fatalf("requests left the Claude API trace endpoint: %v", urls)
 	}
 }
 

@@ -13,14 +13,14 @@ import (
 func TestTrayEgressTip(t *testing.T) {
 	cn := egress.Result{State: egress.Unsupported, Loc: "CN"}
 	for lang, want := range map[string]string{
-		"en":    "outside Anthropic's supported regions",
-		"zh":    "不在 Anthropic 支持的地区内",
-		"zh-TW": "不在 Anthropic 支援的地區內",
-		"ja":    "サポート対象地域外",
-		"de":    "außerhalb der von Anthropic unterstützten Regionen",
+		"en":    "Claude API route check: CN is outside Anthropic's supported regions",
+		"zh":    "Claude API 出口检测：CN 不在 Anthropic 支持的地区内",
+		"zh-TW": "Claude API 網路出口檢測：CN 不在 Anthropic 支援的地區內",
+		"ja":    "Claude API の接続元チェック：CN は Anthropic のサポート対象地域外です",
+		"de":    "Claude-API-Verbindungsprüfung: CN liegt außerhalb der von Anthropic unterstützten Regionen",
 	} {
 		got := trayEgressTip(lang, cn)
-		if !strings.Contains(got, want) || !strings.Contains(got, "CN") {
+		if !strings.Contains(got, want) {
 			t.Errorf("%s: %q", lang, got)
 		}
 		for _, w := range []string{"ban", "封", "安全", "sicher"} {
