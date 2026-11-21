@@ -1036,12 +1036,14 @@ func wslAgent(k wslKind, d distro) *Agent {
 			return v
 		}
 	}
-	if sync := a.Sync; sync != nil {
-		a.Sync = func() error {
-			if !d.live() {
-				return nil // its files get the catalog once it runs
+	for _, hook := range []*func() error{&a.Sync, &a.cleanUnwired} {
+		if run := *hook; run != nil {
+			*hook = func() error {
+				if !d.live() {
+					return nil // leave the files of a stopped distro alone
+				}
+				return run()
 			}
-			return sync()
 		}
 	}
 	if check := a.Check; check != nil {
@@ -1095,8 +1097,10 @@ func unreached(a *Agent, err error) *Agent {
 			a.Fields[i].Set = func(string) error { return err }
 		}
 	}
-	if a.Sync != nil {
-		a.Sync = func() error { return err }
+	for _, hook := range []*func() error{&a.Sync, &a.cleanUnwired} {
+		if *hook != nil {
+			*hook = func() error { return err }
+		}
 	}
 	return a
 }

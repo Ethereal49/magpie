@@ -930,6 +930,9 @@ func (a *Agent) Disconnect() (err error) {
 		return a.Native.Execute(plan)
 	}
 	if !a.Wired() {
+		if a.cleanUnwired != nil {
+			return a.cleanUnwired()
+		}
 		return nil
 	}
 	// the user's say, kept till they connect it again: nothing magpie does

@@ -1122,6 +1122,20 @@ func claudeIn(at place) *Agent {
 		}
 		return nil
 	}
+	// With the gateway gone, a marker alone cannot distinguish a stale
+	// picker from one the user replaced. Leave other endpoints alone.
+	cleanUnwiredPicker := func() error {
+		if env("ANTHROPIC_BASE_URL") != "" || !magpiesPicker(path) {
+			return nil
+		}
+		if err := edit.DelJSON(path, "modelPicker"); err != nil {
+			return err
+		}
+		if stashShared()[pickerKey] != "" {
+			forget(pickerKey)
+		}
+		return nil
+	}
 	writePicker := func() error {
 		if _, has := edit.GetJSON(path, "modelPicker"); has && !pickerOurs() {
 			return nil
@@ -2593,6 +2607,7 @@ func claudeIn(at place) *Agent {
 			forget(at.key("claude.model"))
 			return nil
 		},
+		cleanUnwired: cleanUnwiredPicker,
 		// the catalog's models, with their levels, as Claude Code is told
 		// them, while magpie's are the ones it has
 		Sync: func() error {
@@ -2601,7 +2616,10 @@ func claudeIn(at place) *Agent {
 				if err := dropStray(); err != nil {
 					return err
 				}
-				return desktopOnly()
+				if err := desktopOnly(); err != nil {
+					return err
+				}
+				return cleanUnwiredPicker()
 			}
 			// connected before magpie marked the first run done
 			onboard()

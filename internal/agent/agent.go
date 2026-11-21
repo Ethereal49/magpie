@@ -184,6 +184,9 @@ type Agent struct {
 	// kept: the endpoint, provider and model the user had. Disconnect runs
 	// it before the fields' defaults.
 	Unwire func() error
+	// cleanUnwired removes an agent's leftover magpie config without
+	// unwiring it again or restoring any of its previous settings.
+	cleanUnwired func() error
 	// Restore, for an agent whose files magpie copied aside before its
 	// first write (beforeMagpie), puts them back as they were where what
 	// Disconnect left says the same. Disconnect runs it last.
